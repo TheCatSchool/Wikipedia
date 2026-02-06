@@ -1,0 +1,49 @@
+ body {
+     margin: 0px;
+ }
+
+ .my-element::-webkit-scrollbar {
+     display: none;
+     /* Hides scrollbar but allows scrolling */
+ }
+
+ .header {
+     justify-content: space-around;
+
+     display: flex;
+     flex-direction: row;
+     width: 100%;
+     height: 10vh;
+     background-color: rgb(255, 255, 255);
+
+ }
+
+ .main {
+     display: flex;
+     width: 100%;
+     height: 90vh;
+     background-color: rgb(255, 255, 255);
+ }
+
+ .link {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     margin-top: 1px;
+     width: 24.5%;
+     box-shadow: 5px 5px rgb(194, 194, 194);
+     background-color: rgb(255, 255, 255);
+ }
+
+ a {
+     color: black;
+     font-size: larger;
+     font-family: 'Courier New', Courier, monospace;
+     font-weight: bold;
+     text-decoration: none;
+ }
+
+ .link:hover {
+     transition-duration: 1s;
+     background-color: rgb(217, 217, 217);
+ }

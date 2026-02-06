@@ -1,0 +1,24 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+     <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
+</head>
+
+<body>
+    <header>
+        <div class="link"><a href="/login">Log in</a></div>
+        <div class="link"><a href="/pages">Pages</a></div>
+        <div class="link"><a href="/home">Log in</a></div>
+    </header>
+    <h2>Edit {{ page.Title }}</h2>
+
+    <form method="POST">
+        <textarea name="content" rows="15">{{ page.Content }}</textarea>
+        <button>Save</button>
+    </form>
+</body>
+
+</html>

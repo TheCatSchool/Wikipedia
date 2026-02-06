@@ -1,0 +1,41 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+     <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
+</head>
+
+<body>
+    <header>
+        <div class="link"><a href="/login">Log in</a></div>
+        <div class="link"><a href="/pages">Pages</a></div>
+        <div class="link"><a href="/home">Log in</a></div>
+    </header>
+
+    <table border="1">
+        <tr>
+
+            <th>Navn</th>
+            <th>View Page:</th>
+            <th>Remove:</th>
+        </tr>
+        {% for u in pages %}
+        <tr>
+            <td>{{ u }}</td>
+            <td><a href="/wiki/{{ u['Title'] }}">View</a></td>
+            <td><a href="/wiki/{{ u }}">Remove</a></td>
+        </tr>
+
+        {% endfor %}
+
+
+
+
+
+
+    </table>
+</body>
+
+</html>
