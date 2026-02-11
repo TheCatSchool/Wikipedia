@@ -14,7 +14,7 @@ def slugify(text):
 app = Flask(__name__)
 app.secret_key = "this is a key"
 
-def get_db_connection():
+def get_db_connection(): #defines the database
     return mysql.connector.connect(
         host="10.200.14.14",
         user="Loji",
@@ -22,80 +22,92 @@ def get_db_connection():
         database="Wikipedia"
     )
 
-@app.route('/')
+@app.route('/') #for start up, redirects to home so i dont have to manually write /home
 def some():
     return redirect('/home')
 
 @app.route('/home')
 def home():
-    return render_template("home.html")
+    return render_template("home.html") #renders home template, which includes links for other pages
 
-@app.route('/registrer', methods=["GET", "POST"])
+@app.route('/registrer', methods=["GET", "POST"]) #register, fetches get and post functions
 def register():
-    if request.method == "POST":
-        brukernavn = request.form['user']
-        epost = request.form['email']
-        passord = generate_password_hash(request.form['password'])
+    if request.method == "POST": #when posting
+        brukernavn = request.form['user'] #fetches information from the html template
+        epost = request.form['email'] #same as above but with email
+        passord = generate_password_hash(request.form['password']) #grabs the set password before hashing it.
+        #hashing the password makes it so that the password in databasee =/ the password
 
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO users (Username, Email, Password_hashed) VALUES (%s, %s, %s)", 
-                       (brukernavn, epost, passord))
+        conn = get_db_connection() #fetch database
+        cursor = conn.cursor() #define database cmds
+        cursor.execute("INSERT INTO users (Username, Email, Password_hashed) VALUES (%s, %s, %s)",  
+                       (brukernavn, epost, passord)) #insert into the database with the gathered information
         conn.commit()
+        #commit changes so its saved
         cursor.close()
         conn.close()
+        #closes the database functions
         flash("Bruker registrert!", "success")
+        #register check
         return redirect(url_for("login"))
-
-    return render_template("reg.html")
+        #redirect to login
+    return render_template("reg.html") #render the html template
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    
+    if session.get("role") == "user": #need to be logged in to view
+        return redirect('/profile')
+    elif session.get("role") == "admin":
+        return redirect('/admin')
     if request.method == "POST":
         brukernavn = request.form['brukernavn']
         passord = request.form['passord']
-
+        #fetches username and password for log in
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM users WHERE Username=%s", (brukernavn,))
+        cursor.execute("SELECT * FROM users WHERE Username=%s", (brukernavn,)) #fetches user with matching username
         user = cursor.fetchone()
         cursor.close()
         conn.close()
 
-        if user and check_password_hash(user['Password_hashed'], passord):
-            session['user'] = user['Username']
+        if user and check_password_hash(user['Password_hashed'], passord): #if the username's password hashed = the inserted password hashed. then continue
+            session['user'] = user['Username'] #set sessions
             session['role'] = user['Role']
             session['id'] = user['ID']
-            if user['Role'] == 'admin':
+            if user['Role'] == 'admin': #if user = admin redirect to admin else redirect to profile
                 return redirect('/admin')
             else:
                 return redirect('/profile')
         else:
-            return render_template("log.html", feil_melding="Ugyldig brukernavn eller passord")
+            return render_template("log.html", feil_melding="Ugyldig brukernavn eller passord") #if non matching, re render
+        #ps: add max chances for safety.
 
     return render_template("log.html")
-@app.route("/admin", methods=["GET", "POST"])
+@app.route("/admin", methods=["GET", "POST"]) #admin b
 def admin_dashboard():
-    if session.get("role") == "admin":
+    if session.get("role") == "admin": #makes it so you need to be admin to be here.
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM users;")
+        cursor.execute("SELECT * FROM users;") #fetches all users
         uses = cursor.fetchall()
         cursor.close()
         conn.close()
-        return render_template("admin.html", brukernavn=session['user'], users=uses)
+        return render_template("admin.html", brukernavn=session['user'], users=uses)  #displays the information
     return redirect(url_for("login"))
 
 # User dashboard
 @app.route("/profile", methods=["GET", "POST"])
 def user_dashboard():
-    if session.get("role") == "user":
+    if session.get("role") == "user": #need to be logged in to view
         return render_template("profile.html", brukernavn=session['user'])
+    elif session.get("role") == "admin":
+        return redirect('/admin')
     return redirect(url_for("login"))
 
-@app.route("/logout")
+@app.route("/logout") #ends all sessions
 def logout():
     session.pop("user", None)
+    session.pop("role", None)
+    session.pop("id", None)
     return redirect(url_for("login"))
 @app.route("/create", methods=["GET", "POST"])
 def create_page():
@@ -180,3 +192,7 @@ def pages():
     return render_template("pages.html", pages=pages)
 
     
+@app.route("/wiki/")
+def wiki_redirect():
+    title = request.args.get("title")
+    return redirect(f"/wiki/{title}")

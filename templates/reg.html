@@ -9,11 +9,11 @@
 </head>
 
 <body>
-    <div class="links">
-        <a href="/login">Log in</a>
-        <a href="/list">Pages</a>
-        <a href="/home">Log in</a>
-    </div>
+    <header>
+        <div class="link"><a href="/profile">proifle</a></div>
+        <div class="link"><a href="/pages">Pages</a></div>
+        <div class="link"><a href="/home">home</a></div>
+    </header>
     <h2>Registrer Ny Bruker</h2>
     <form method="POST" action="{{ url_for('register') }}">
         <label for="brukernavn">Brukernavn:</label><br>

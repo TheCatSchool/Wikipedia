@@ -4,16 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-     <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
 </head>
 
 <body>
     <header>
-        <div class="link"><a href="/login">Log in</a></div>
+        <div class="link"><a href="/profile">proifle</a></div>
         <div class="link"><a href="/pages">Pages</a></div>
-        <div class="link"><a href="/home">Log in</a></div>
+        <div class="link"><a href="/home">home</a></div>
     </header>
-
+    <form method="GET" action="/wiki/">
+        <div class="everything else">
+            <input type="text" name="title" placeholder="search">
+            <button type="submit">Search</button>
+        </div>
+    </form>
     <table border="1">
         <tr>
 
@@ -35,7 +40,9 @@
 
 
 
+
     </table>
+
 </body>
 
 </html>
