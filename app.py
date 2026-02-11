@@ -54,7 +54,7 @@ def register():
     return render_template("reg.html") #render the html template
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if session.get("role") == "user": #need to be logged in to view
+    if session.get("role") == "user": ##checking if you are allready logged in or not
         return redirect('/profile')
     elif session.get("role") == "admin":
         return redirect('/admin')
@@ -106,34 +106,34 @@ def user_dashboard():
 @app.route("/logout") #ends all sessions
 def logout():
     session.pop("user", None)
-    session.pop("role", None)
+    session.pop("role", None) #ends all sessions
     session.pop("id", None)
     return redirect(url_for("login"))
-@app.route("/create", methods=["GET", "POST"])
+@app.route("/create", methods=["GET", "POST"]) 
 def create_page():
-    if not session.get("user"):
+    if not session.get("user"): #checks if you are logged in if not redirects
         return redirect(url_for("login"))
 
-    if request.method == "POST":
+    if request.method == "POST": 
         title = request.form['title']
-        content = request.form['content']
+        content = request.form['content'] #fetches information like title, content and creator id
         creatorid = session.get("id")
 
-        slug = slugify(title)
+        slug = slugify(title) #turns the title into a slug used for urls
 
         conn = get_db_connection()
-        cursor = conn.cursor()
+        cursor = conn.cursor() #fetches database
 
         cursor.execute(
             "INSERT INTO pages (Title, Slug, Content, CreatorID) VALUES (%s, %s, %s, %s)",
-            (title, slug, content, creatorid)
+            (title, slug, content, creatorid) #inserts info into database(creating the site)
         )
 
         conn.commit()
         cursor.close()
         conn.close()
 
-        return redirect(url_for("view_page", slug=slug))
+        return redirect(url_for("view_page", slug=slug)) #redirects to the page, the slug is url
 
     return render_template("create.html")
 @app.route("/wiki/<slug>")
@@ -141,7 +141,7 @@ def view_page(slug):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM pages WHERE Slug=%s", (slug,))
+    cursor.execute("SELECT * FROM pages WHERE Slug=%s", (slug,)) #fetches the information
     page = cursor.fetchone()
 
     cursor.close()
@@ -149,7 +149,7 @@ def view_page(slug):
 
     if not page:
         flash("Page does not exist. Create it!")
-        return redirect(url_for("create_page"))
+        return redirect(url_for("create_page")) #if page doesnt exist redirect to create
 
     return render_template("view.html", page=page)
 @app.route("/edit/<slug>", methods=["GET", "POST"])
@@ -160,14 +160,14 @@ def edit_page(slug):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM pages WHERE Slug=%s", (slug,))
+    cursor.execute("SELECT * FROM pages WHERE Slug=%s", (slug,)) #feches page info
     page = cursor.fetchone()
 
     if request.method == "POST":
-        new_content = request.form['content']
+        new_content = request.form['content'] #fetches edits
 
         cursor.execute(
-            "UPDATE pages SET Content=%s WHERE Slug=%s",
+            "UPDATE pages SET Content=%s WHERE Slug=%s", #updates page
             (new_content, slug)
         )
         conn.commit()
@@ -175,7 +175,7 @@ def edit_page(slug):
         cursor.close()
         conn.close()
 
-        return redirect(url_for("view_page", slug=slug))
+        return redirect(url_for("view_page", slug=slug)) #redirects to view page, therefore refreshing the page
 
     cursor.close()
     conn.close()
@@ -186,13 +186,13 @@ def pages():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT Title FROM pages")
+    cursor.execute("SELECT Title FROM pages") #fetchas all pages
     pages = cursor.fetchall()
     
-    return render_template("pages.html", pages=pages)
+    return render_template("pages.html", pages=pages) #renders template where they are showed
 
     
-@app.route("/wiki/")
-def wiki_redirect():
-    title = request.args.get("title")
-    return redirect(f"/wiki/{title}")
+@app.route("/wiki/") #this is only used for the search function
+def wiki_redirect(): 
+    title = request.args.get("title") #uses title which it has been given before
+    return redirect(f"/wiki/{title}") #redirects to wiki page with slug. 
