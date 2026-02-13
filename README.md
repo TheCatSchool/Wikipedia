@@ -14,9 +14,9 @@
 ## 1. Prosjektidé og problemstilling
 
 ### Beskrivelse
-jeg skal lage en liten wikipedia som lar deg lage sider hvor du kan skrive informasjon
+Jeg skal lage en liten wikipedia som lar deg lage sider hvor du kan skrive informasjon om hva som helst. Det skal ha få regler og være en mer anarkistisk alternativ til Wikipedia
 
-det løser ikke et spesifkt problem som ikke er løst, men det lar folk skrive artikkler om hva de vil.
+Det løser ikke et spesifkt problem som ikke er løst, men det lar folk skrive artikkler om hva de vil.
 
 det lar mer folk spre ulike ting, derfor er det nyttig
 
@@ -26,7 +26,7 @@ det lar mer folk spre ulike ting, derfor er det nyttig
 
 ### Målgruppe
 Hvem er løsningen laget for?
-løsningen er laget for folk som har lyst til å skrive alt fra deres meninger til fantasy land
+løsningen er laget for folk som har lyst til å skrive informasjon om alt fra deres rare hobbyer til å lage wikipedia artikkler om fantasy land
 
 ---
 
@@ -35,15 +35,15 @@ løsningen er laget for folk som har lyst til å skrive alt fra deres meninger t
 Systemet skal minst ha følgende funksjoner:
 
 1. Funksjon 1  
-    log in
+    log in, muligheten til å logge in med en user til session
 2. Funksjon 2  
-    log out
+    log out, fjerner sessions
 3. Funksjon 3  
-    admin dashboard
+    admin dashboard, lar admins se brukere og fjerne users som bryter regler
 4. Funksjon 4  
     mulgihet til å lage og redigere sider
 5. Funksjon 5  
-    mulighet til å søke å finne sider
+    mulighet til å søke for å finne sider
 
 *(Legg til flere hvis nødvendig)*
 
