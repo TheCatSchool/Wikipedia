@@ -79,7 +79,11 @@ Systemet skal minst ha følgende funksjoner:
 - Navn: Pages
 - Beskrivelse: alle ulike sider, deres informasjon, deres innhold, navn, og skaperen. 
 
+**Tabell 3(ikke garantert)**: 
+- Navn: styles
+- Beskrivelse: ulike styles man kan bruke i pages. 
 *(Minst 2–4 tabeller)*
+
 
 ### Eksempel på tabellstruktur
 ```sql
@@ -108,4 +112,8 @@ pages (
 | CreatedAt | timestamp    | YES  |     | current_timestamp() |                               |
 | UpdatedAt | timestamp    | YES  |     | current_timestamp() | on update current_timestamp() |
 +-----------+--------------+------+-----+---------------------+-------------------------------+
+)
+Presets(
+    presetID 
+    Preset navn
 )
