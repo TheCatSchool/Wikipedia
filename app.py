@@ -17,8 +17,8 @@ app.secret_key = "this is a key"
 def get_db_connection(): #defines the database
     return mysql.connector.connect(
         host="10.200.14.14",
-        user="Loji",
-        password="TheLongMarch",
+        user="work",
+        password="123",
         database="Wikipedia"
     )
 

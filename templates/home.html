@@ -8,15 +8,41 @@
 </head>
 
 <body>
-    <header>
-        <div class="link"><a href="/profile">proifle</a></div>
-        <div class="link"><a href="/pages">Pages</a></div>
-        <div class="link"><a href="/home">home</a></div>
-        <div class="search">
+    <div class="LinkBarWikiStyle">
+        <div class="LinkBarWikiStyle-section"><a href="/home">
+                <p>Home</p>
+            </a></div>
+        <div class="LinkBarWikiStyle-section">
             <input type="text" id="search" placeholder="search" name="search">
             <input type="submit" value="search">
         </div>
-    </header>
+        <div class="LinkBarWikiStyle-section1"><a href="/pages">
+                <p>Pages</p>
+            </a></div>
+
+        {% if session.get('user') %}
+
+        <div class="LinkBarWikiStyle-section">
+            <a href="profile.html">
+                <p>profile</p>
+            </a>
+
+        </div>
+        {% else %}
+        <div class="LinkBarWikiStyle-section1">
+            <a href="/login">
+                <p>log in</p>
+            </a>
+             <a href="/register">
+                <p>register</p>
+            </a>
+
+        </div>
+        {% endif %}
+
+      
+
+    </div>
     <div class="main">
     </div>
 </body>
