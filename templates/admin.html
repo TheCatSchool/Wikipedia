@@ -26,6 +26,7 @@
 
                 <th>Navn</th>
                 <th>ID</th>
+                <th>status</th>
                 <th>View Page:</th>
                 <th>Remove:</th>
             </tr>
@@ -33,7 +34,12 @@
             <tr>
                 <td>{{ u.ID }}</td>
                 <td>{{ u.Username }}</td>
-                <td><a href="/view/{{ u.ID}}">View</a></td>
+                {% if u.Active == 0 %}
+                <td>Archived/Banned</td>
+                {% else %}
+                <td>Active</td>
+                {% endif %}
+                <td><a href="/users/{{ u.ID}}">View</a></td>
                 <td><a href="/remove/{{ u.ID }}">Remove</a></td>
             </tr>
 

@@ -12,18 +12,20 @@
         <div class="LinkBarWikiStyle-section"><a href="/home">
                 <p>Home</p>
             </a></div>
+        <form method="GET" action="/wiki/">
         <div class="LinkBarWikiStyle-section">
-            <input type="text" id="search" placeholder="search" name="search">
-            <input type="submit" value="search">
+            <input type="text" name="title" placeholder="search">
+            <button type="submit">Search</button>
         </div>
+    </form>
         <div class="LinkBarWikiStyle-section1"><a href="/pages">
                 <p>Pages</p>
-            </a></div>
+        </a></div>
 
         {% if session.get('user') %}
 
         <div class="LinkBarWikiStyle-section">
-            <a href="profile.html">
+            <a href="/profile">
                 <p>profile</p>
             </a>
 
@@ -33,7 +35,7 @@
             <a href="/login">
                 <p>log in</p>
             </a>
-             <a href="/register">
+             <a href="/registrer">
                 <p>register</p>
             </a>
 
@@ -45,6 +47,7 @@
     </div>
     <div class="main">
     </div>
+    <button onclick="document.referrer()">return ⬅️</button>
 </body>
 
 </html>

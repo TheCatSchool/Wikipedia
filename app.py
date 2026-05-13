@@ -2,6 +2,12 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
 import re
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
+
+
+
 
 def slugify(text):
     text = text.lower()
@@ -14,12 +20,23 @@ def slugify(text):
 app = Flask(__name__)
 app.secret_key = "this is a key"
 
+limiter = Limiter(
+    get_remote_address,  # Tracks users by their IP address
+    app=app,
+    default_limits=["200 per day"],
+    storage_uri="memory://", # Use "redis://localhost:6379" for production
+)
+
+
 def get_db_connection(): #defines the database
     return mysql.connector.connect(
-        host="10.200.14.14",
+        host="127.0.0.1",
+        # host="10.200.14.14",
         user="work",
-        password="123",
+        # password="123",
+        password="",
         database="Wikipedia"
+        
     )
 
 @app.route('/') #for start up, redirects to home so i dont have to manually write /home
@@ -53,6 +70,7 @@ def register():
         #redirect to login
     return render_template("reg.html") #render the html template
 @app.route("/login", methods=["GET", "POST"])
+@limiter.limit("3 per minute", methods=["POST"]) 
 def login():
     if session.get("role") == "user": ##checking if you are allready logged in or not
         return redirect('/profile')
@@ -62,26 +80,51 @@ def login():
         brukernavn = request.form['brukernavn']
         passord = request.form['passord']
         #fetches username and password for log in
+        
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM users WHERE Username=%s", (brukernavn,)) #fetches user with matching username
         user = cursor.fetchone()
-        cursor.close()
-        conn.close()
 
-        if user and check_password_hash(user['Password_hashed'], passord): #if the username's password hashed = the inserted password hashed. then continue
+        # cursor.execute("SELECT Active FROM users WHERE Username=%s", (brukernavn,))
+        # activity = cursor.fetchone()
+       
+        
+       
+        if user and check_password_hash(user['Password_hashed'], passord):
+            session.clear() #if the username's password hashed = the inserted password hashed. then continue
             session['user'] = user['Username'] #set sessions
             session['role'] = user['Role']
             session['id'] = user['ID']
-            if user['Role'] == 'admin': #if user = admin redirect to admin else redirect to profile
-                return redirect('/admin')
+            x = user['ID']
+            cursor.execute("UPDATE users SET UsedAt = current_timestamp() where id =%s", (x,))
+            conn.commit()
+
+            if user['Active'] == 0:
+                
+                cursor.close()
+                conn.close()
+                return redirect('/banned')  
             else:
-                return redirect('/profile')
+                
+                cursor.close()
+                conn.close()
+                if user['Role'] == 'admin': #if user = admin redirect to admin else redirect to profile
+                    return redirect('/admin')
+                else:
+                    return redirect('/profile')
         else:
+            cursor.close()
+            conn.close()
             return render_template("log.html", feil_melding="Ugyldig brukernavn eller passord") #if non matching, re render
         #ps: add max chances for safety.
 
     return render_template("log.html")
+@app.route("/banned")
+def banned():
+    session.clear()
+    return render_template("banned.html")
+
 @app.route("/admin", methods=["GET", "POST"]) #admin b
 def admin_dashboard():
     if session.get("role") == "admin": #makes it so you need to be admin to be here.
@@ -102,12 +145,11 @@ def user_dashboard():
     elif session.get("role") == "admin":
         return redirect('/admin')
     return redirect(url_for("login"))
+    
 
 @app.route("/logout") #ends all sessions
 def logout():
-    session.pop("user", None)
-    session.pop("role", None) #ends all sessions
-    session.pop("id", None)
+    session.clear()
     return redirect(url_for("login"))
 @app.route("/create", methods=["GET", "POST"]) 
 def create_page():
@@ -156,11 +198,15 @@ def view_page(slug):
 def edit_page(slug):
     if not session.get("user"):
         return redirect(url_for("login"))
-
+    # BanOrNot = session.get(id)
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM pages WHERE Slug=%s", (slug,)) #feches page info
+    # cursor.execute("SELECT Active FROM users WHERE id=%s", (BanOrNot,))
+    # activity = cursor.fetchone()
+    # if (activity == 0):
+    #     return redirect("/home")
+    cursor.execute("SELECT FROM pages WHERE Slug=%s", (slug,)) #feches page info
     page = cursor.fetchone()
 
     if request.method == "POST":
@@ -196,3 +242,47 @@ def pages():
 def wiki_redirect(): 
     title = request.args.get("title") #uses title which it has been given before
     return redirect(f"/wiki/{title}") #redirects to wiki page with slug. 
+
+@app.route("/users/<slug>", methods=["GET", "POST"])
+def users_profiles(slug):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM users WHERE ID =%s", (slug,)) 
+    pr = cursor.fetchone()
+    
+
+    user = pr['Username']
+    email = pr['Email']
+    Status = pr['Active']
+    Role = pr['Role']
+    birth = pr['CreatedAt']
+    lastUsed = pr['UsedAt']
+    
+
+
+    return render_template("users.html", Name=user, email=email, bon=Status, role=Role, created=birth, lastUsed=lastUsed)
+
+@app.route("/remove/<slug>")
+def delete_users(slug):
+    if session.get("role") == "admin":
+
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        # cursor.execute("DELETE FROM users WHERE id=%s",(slug,)) 
+        cursor.execute("UPDATE users SET Active =%s  WHERE id=%s", (0, slug,))
+        conn.commit()
+        cursor.close()
+        conn.close()
+    return redirect("/profile")
+
+#error handlers:
+# @app.errorhandler(429)
+# def limit():
+#     return render_template("home.html")
+
+
+@app.route("/faq")
+def faq():
+    return render_template('faq.html')
