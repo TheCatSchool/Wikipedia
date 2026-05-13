@@ -113,7 +113,49 @@ pages (
 | UpdatedAt | timestamp    | YES  |     | current_timestamp() | on update current_timestamp() |
 +-----------+--------------+------+-----+---------------------+-------------------------------+
 )
-Presets(
-    presetID 
-    Preset navn
-)
+```
+
+
+Databasestrøm:
+
+    HTML → Flask → MariaDB → Flask → HTML-tabell
+
+------------------------------------------------------------------------
+
+## 7. Kodeforklaring
+
+
+
+------------------------------------------------------------------------
+
+## 8. Sikkerhet og pålitelighet
+
+-   venv\
+-   Miljøvariabler\
+-   Parameteriserte spørringer\
+-   Validering\
+-   Feilhåndtering
+
+------------------------------------------------------------------------
+
+## 9. Feilsøking og testing
+
+-   Typiske feil\
+-   Hvordan du løste dem\
+-   Testmetoder
+
+------------------------------------------------------------------------
+
+## 10. Konklusjon og refleksjon
+
+-   Hva lærte du?\
+-   Hva fungerte bra?\
+-   Hva ville du gjort annerledes?\
+-   Hva var utfordrende?
+
+------------------------------------------------------------------------
+
+## 11. Kildeliste
+
+-   w3schools\
+-   flask.palletsprojects.com
