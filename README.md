@@ -24,7 +24,7 @@ Jeg skal lage en app som lar personen lage sider hvor de kan skrive artikler sel
 - lage en tryggere log in, gi brukeren maks 3 muligheter til å prøve å logge in
 
 
-- Lag et godt og detaljert Kanban-board (github-projects) som du viser for sensor. Legg inn link her
+
 https://github.com/users/TheCatSchool/projects/4
 ---
 ## 2. Systembeskrivelse
@@ -81,8 +81,10 @@ Waitress:
 
 ### Tjenestekonfigurasjon
 
--   systemctl / Supervisor\
--   Filrettigheter\
+-   waitress run:
+```waitress-serve --port=8080 app:app```
+runner da på ipen til windows pc
+
 -   Miljøvariabler
 
 ------------------------------------------------------------------------
@@ -292,9 +294,13 @@ bruke "live" function for å lage html og css live
 ## 10. Konklusjon og refleksjon
 
 -   Hva lærte du?\
+jeg lærte mye om sessions og hvordan man bruker de effektivt. jeg lærte mer om hvordan bruke datbaser og connections. og om hvordan man hoster så at andre kan bruke
 -   Hva fungerte bra?\
+jeg syntes at å bytte til debian server var veldig bra og effektivt for development og lot meg gjøre alt på en pc
 -   Hva ville du gjort annerledes?\
+brukt tiden min mer effektivt og byttet til debian tidligere
 -   Hva var utfordrende?
+å dokumentere alt sammen 
 
 ------------------------------------------------------------------------
 
