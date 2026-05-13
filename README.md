@@ -284,11 +284,13 @@ vis hashed passord ikke var lik user passord blir man redircted til log in med e
 |Feil| konsekvens | Fiks |
 |-------|------------|-------------|
 |log in sessions ikke clearet helt| man kunne ikke bytte brukere uten å ha problemer med links til profile| session clear istendenfor session pop|
-|normale brukere kunne bruke delete user kraften| bruker kunne slette andre brukere uten admin med å bare skrive /remove/<id> til bruken de ville slette| kreve admin session for at det skulle vrike
--   Testmetoder
-user testing som lott meg se mange så feil med programmet mitt
-å prøve koden i database først(ikke farlig kode)
-bruke "live" function for å lage html og css live
+|normale brukere kunne bruke delete user kraften| bruker kunne slette andre brukere uten admin med å bare skrive /remove/<id> til bruken de ville slette| kreve admin session for at det skulle vrike|
+
+**Testmetoder:**
+
+- user testing som lott meg se mange så feil med programmet mitt
+- å prøve koden i database først(ikke farlig kode)
+- bruke "live" function for å lage html og css live
 ------------------------------------------------------------------------
 
 ## 10. Konklusjon og refleksjon
