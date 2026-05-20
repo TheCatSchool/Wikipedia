@@ -286,3 +286,42 @@ def delete_users(slug):
 @app.route("/faq")
 def faq():
     return render_template('faq.html')
+
+@app.route("/faq/request", methods=["GET", "POST"])
+def faqreq():
+        if not session.get("user"):
+            return redirect("/login")
+        
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        if request.method == "POST":
+            question = request.form['Q']
+            tr = request.form['typeR']
+            usrid = session.get("id")
+            cursor.execute("select * from users where id = %s", (usrid,))
+            usr = cursor.fetchone()
+            usrname = usr['Username']
+            usremail = usr['Email']
+        
+    
+            cursor.execute("INSERT INTO Questions (navn, epost, sporsmal, type) VALUES (%s, %s, %s, %s)",
+                           (usrname, usremail, question, tr))
+            conn.commit()
+            conn.close()
+
+
+        # cursor.execute(
+        #     "INSERT INTO pages (Title, Slug, Content, CreatorID) VALUES (%s, %s, %s, %s)",
+        #     (title, slug, content, creatorid) #inserts info into database(creating the site)
+        # )
+
+
+
+            return redirect("/faq")
+        
+
+
+
+
+
+        return render_template("faqRequest.html")

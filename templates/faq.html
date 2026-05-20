@@ -12,7 +12,10 @@
         <button id="II">How to create pages</button>
         <button id="III">Editing Pages</button>
         <button id="IIII">Accounts and rules</button>
+        <a href="/faq/request"><button>advanced questions</button></a>
     </div>
+    <div id="Display"></div>
+
 </body>
 
 </html>
@@ -22,4 +25,32 @@
     edit = document.getElementById("III")
     AOR = document.getElementById("IIII")
 
+    display = document.getElementById("Display")
+
+    create.addEventListener("click", actions);
+    pages.addEventListener("click", pagesc);
+    edit.addEventListener("click", actions);
+    AOR.addEventListener("click", actions);
+
+
+    function actions() {
+        display.innerHTML = "<p>first go to home. then click the register link in the top right corner. then write your prefered username and password and your email. then log in with said username and password</p>"
+    }
+    function pagesc() {
+        display.innerHTML = "go to trough either pages or your profile, click the create link. here you should find a open page for you to write whatever you please. there are no rules beside posting illegal material."
+    }
+    function editing() {
+        display.innerHTML = "go to trough either pages or a selected profile, click the edit link. here you should find the page for you to write whatever you please. there are no rules beside posting illegal material. anyone can edit any page"
+    }
+    function more() {
+        display.innerHTML = '<a></a>'
+    }
 </script>
+<style>
+    #Display {
+        width: 500px;
+        height: 500px;
+        display: flex;
+        transition: 1s;
+    }
+</style>
