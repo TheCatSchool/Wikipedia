@@ -179,7 +179,7 @@ CREATE TABLE pages (
 );
 ```
 ```
-CREATE TABLE Kontakt (
+CREATE TABLE Questions (
     id INT(11) NOT NULL AUTO_INCREMENT,
     navn VARCHAR(100) NOT NULL,
     epost VARCHAR(150) NOT NULL,
