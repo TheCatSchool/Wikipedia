@@ -11,7 +11,8 @@
         <button id="I">How to create an account</button>
         <button id="II">How to create pages</button>
         <button id="III">Editing Pages</button>
-        <button id="IIII">Accounts and rules</button>
+        <button id="IIII">rules</button>
+        <button id="IIIII">Accounts</button>
         <a href="/faq/request"><button>advanced questions</button></a>
     </div>
     <div id="Display"></div>
@@ -24,14 +25,15 @@
     pages = document.getElementById("II")
     edit = document.getElementById("III")
     AOR = document.getElementById("IIII")
+    AO1R = document.getElementById("IIIII")
 
     display = document.getElementById("Display")
 
     create.addEventListener("click", actions);
     pages.addEventListener("click", pagesc);
-    edit.addEventListener("click", actions);
-    AOR.addEventListener("click", actions);
-
+    edit.addEventListener("click", editing);
+    AOR.addEventListener("click", more);
+    AO1R.addEventListener("click", more1)
 
     function actions() {
         display.innerHTML = "<p>first go to home. then click the register link in the top right corner. then write your prefered username and password and your email. then log in with said username and password</p>"
@@ -43,7 +45,10 @@
         display.innerHTML = "go to trough either pages or a selected profile, click the edit link. here you should find the page for you to write whatever you please. there are no rules beside posting illegal material. anyone can edit any page"
     }
     function more() {
-        display.innerHTML = '<a></a>'
+        display.innerHTML = '<a>there are no rules besides posting illegal videos.</a>'
+    }
+    function more1() {
+        display.innerHTML = '<a>you can view profiles, you can ask to be deleted by going to Faq/requests. an admin will then delete you at any time.</a>'
     }
 </script>
 <style>
