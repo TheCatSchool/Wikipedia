@@ -264,6 +264,21 @@ så sjekker programmet om du er admin eller normal user og sender de til deres r
 
 vis hashed passord ikke var lik user passord blir man redircted til log in med en feil melding. 
 
+------------------------------------------------------------------------
+**FAQ:**
+ jeg har satt opp en faq side hvor man kan se noen generelle spørsmål, men også sende inn sine egene.
+ ```/faq```
+  ```/faq/requests```
+  når man sender in request blir den lagret i en datbase, man må vere logged in for å kunne sende requests, dette gjorde jeg for at man kunne se requests. error vis det er mer fra en, men det kan fikses senere (tenker å fikse det på eksamen)
+
+```/faq/<slug>```
+
+  vis man er admin kan man svare på requests, man kan ikke se svarene som en bruker dette skal bli fikset
+  ```admin/faq/<slug>```
+  
+  til slutt har jeg endret på min remove kode så at den annonymerer brukere også som oppgaven ba om.
+
+ 
 
 
 ------------------------------------------------------------------------
