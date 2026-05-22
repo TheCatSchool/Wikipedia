@@ -133,6 +133,19 @@ pages - artikkler i nettsiden
 | UsedAt          | datetime     | YES  |     | current_timestamp() |                |
 +-----------------+--------------+------+-----+---------------------+----------------+
 ```
+```
++-----------+--------------+------+-----+---------------------+----------------+
+| Field     | Type         | Null | Key | Default             | Extra          |
++-----------+--------------+------+-----+---------------------+----------------+
+| id        | int(11)      | NO   | PRI | NULL                | auto_increment |
+| navn      | varchar(100) | NO   |     | NULL                |                |
+| epost     | varchar(150) | NO   |     | NULL                |                |
+| sporsmal  | text         | NO   |     | NULL                |                |
+| opprettet | datetime     | NO   |     | current_timestamp() |                |
+| type      | varchar(30)  | YES  |     | NULL                |                |
+| Answer    | varchar(200) | YES  |     | 0                   |                |
++-----------+--------------+------+-----+---------------------+----------------+
+```
 **SQL-eksempel:**
 
 ``` sql
@@ -163,6 +176,19 @@ CREATE TABLE pages (
     UNIQUE KEY (Slug),
     KEY (CreatorID),
     FOREIGN KEY (CreatorID) REFERENCES users(ID) ON DELETE SET NULL
+);
+```
+```
+CREATE TABLE Kontakt (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    navn VARCHAR(100) NOT NULL,
+    epost VARCHAR(150) NOT NULL,
+    sporsmal TEXT NOT NULL,
+    opprettet DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    type VARCHAR(30) DEFAULT NULL,
+    Answer VARCHAR(200) DEFAULT '0',
+
+    PRIMARY KEY (id)
 );
 ```
 
