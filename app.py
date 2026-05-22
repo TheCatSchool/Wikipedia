@@ -325,3 +325,23 @@ def faqreq():
 
 
         return render_template("faqRequest.html")
+
+@app.route("/faq/<slug>", methods=["GET", "POST"])
+def raquery(slug):
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM Questions WHERE navn =%s", (slug,)) 
+    pr = cursor.fetchone()
+    
+    usr = pr['navn']
+    email = pr['epost']
+    question = pr['sporsmal']
+    askd = pr['opprettet']
+    typ = pr['type']
+
+
+
+
+    return render_template("faqview.html", Name=usr, email=email, bon=question, role=askd, created=typ)
