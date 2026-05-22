@@ -270,13 +270,19 @@ def delete_users(slug):
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
 
-        # cursor.execute("DELETE FROM users WHERE id=%s",(slug,)) 
-        cursor.execute("UPDATE users SET Active =%s  WHERE id=%s", (0, slug,))
+        cursor.execute("""
+            UPDATE users
+            SET
+                Active = 0,
+                Username = CONCAT('deleted_user_', id),
+                Email = CONCAT('deleted_', id, '@example.local')
+            WHERE id = %s
+        """, (slug,))
+
         conn.commit()
         cursor.close()
         conn.close()
     return redirect("/profile")
-
 #error handlers:
 # @app.errorhandler(429)
 # def limit():
@@ -345,3 +351,32 @@ def raquery(slug):
 
 
     return render_template("faqview.html", Name=usr, email=email, bon=question, role=askd, created=typ)
+
+@app.route("/admin/faq/<slug>", methods=["GET", "POST"])
+def adminquery(slug):
+ 
+    if session.get("role") == "admin":
+        
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM Questions WHERE navn =%s", (slug,)) 
+        pr = cursor.fetchone()
+    
+        usr = pr['navn']
+        faqid = ['id']
+        email = pr['epost']
+        question = pr['sporsmal']
+        askd = pr['opprettet']
+        typ = pr['type']
+        if request.method == "POST":
+            answer = request.form["ans"]
+            cursor.execute("Update Questions SET Answer = %s WHERE navn = %s",(answer, usr,))
+            conn.commit()
+            conn.close()
+            
+            return redirect("/home")
+        
+    else: 
+        return redirect("/profile")
+
+    return render_template("adminFaq.html", Name=usr, email=email, bon=question, role=askd, created=typ)
