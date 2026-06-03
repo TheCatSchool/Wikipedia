@@ -120,30 +120,46 @@ pages - artikkler i nettsiden
 +-----------------+--------------+------+-----+---------+----------------+
 ```
 ```
-+-----------+--------------+------+-----+---------------------+-------------------------------+
-| Field     | Type         | Null | Key | Default             | Extra                         |
-+-----------+--------------+------+-----+---------------------+-------------------------------+
-| ID        | int(11)      | NO   | PRI | NULL                | auto_increment                |
-| Title     | varchar(255) | NO   | UNI | NULL                |                               |
-| Slug      | varchar(255) | NO   | UNI | NULL                |                               |
-| Content   | text         | NO   |     | NULL                |                               |
-| CreatorID | int(11)      | YES  | MUL | NULL                |                               |
-| CreatedAt | timestamp    | YES  |     | current_timestamp() |                               |
-| UpdatedAt | timestamp    | YES  |     | current_timestamp() | on update current_timestamp() |
-+-----------+--------------+------+-----+---------------------+-------------------------------+
++-----------------+--------------+------+-----+---------------------+----------------+
+| Field           | Type         | Null | Key | Default             | Extra          |
++-----------------+--------------+------+-----+---------------------+----------------+
+| ID              | int(11)      | NO   | PRI | NULL                | auto_increment |
+| Username        | varchar(75)  | NO   | UNI | NULL                |                |
+| Password_hashed | varchar(225) | NO   |     | NULL                |                |
+| Email           | varchar(100) | YES  |     | NULL                |                |
+| Active          | tinyint(1)   | YES  |     | 1                   |                |
+| Role            | varchar(10)  | NO   |     | user                |                |
+| CreatedAt       | date         | YES  |     | current_timestamp() |                |
+| UsedAt          | datetime     | YES  |     | current_timestamp() |                |
++-----------------+--------------+------+-----+---------------------+----------------+
+```
+```
++-----------+--------------+------+-----+---------------------+----------------+
+| Field     | Type         | Null | Key | Default             | Extra          |
++-----------+--------------+------+-----+---------------------+----------------+
+| id        | int(11)      | NO   | PRI | NULL                | auto_increment |
+| navn      | varchar(100) | NO   |     | NULL                |                |
+| epost     | varchar(150) | NO   |     | NULL                |                |
+| sporsmal  | text         | NO   |     | NULL                |                |
+| opprettet | datetime     | NO   |     | current_timestamp() |                |
+| type      | varchar(30)  | YES  |     | NULL                |                |
+| Answer    | varchar(200) | YES  |     | 0                   |                |
++-----------+--------------+------+-----+---------------------+----------------+
 ```
 **SQL-eksempel:**
 
 ``` sql
-CREATE TABLE users (
-    ID              INT(11)         NOT NULL AUTO_INCREMENT,
-    Username        VARCHAR(75)     NOT NULL,
-    Password_hashed VARCHAR(225)    NOT NULL,
-    Email           VARCHAR(100)    DEFAULT NULL,
-    Active          TINYINT(1)      DEFAULT 1,
-    Role            VARCHAR(10)     NOT NULL DEFAULT 'user',
-    PRIMARY KEY (ID),
-    UNIQUE KEY (Username)
+CREATE TABLE Users (
+    ID INT(11) NOT NULL AUTO_INCREMENT,
+    Username VARCHAR(75) NOT NULL UNIQUE,
+    Password_hashed VARCHAR(225) NOT NULL,
+    Email VARCHAR(100) DEFAULT NULL,
+    Active TINYINT(1) DEFAULT 1,
+    Role VARCHAR(10) NOT NULL DEFAULT 'user',
+    CreatedAt DATE DEFAULT CURRENT_TIMESTAMP,
+    UsedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    
+    PRIMARY KEY (ID)
 );
 ```
 ``` sql
@@ -160,6 +176,19 @@ CREATE TABLE pages (
     UNIQUE KEY (Slug),
     KEY (CreatorID),
     FOREIGN KEY (CreatorID) REFERENCES users(ID) ON DELETE SET NULL
+);
+```
+```
+CREATE TABLE Questions (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    navn VARCHAR(100) NOT NULL,
+    epost VARCHAR(150) NOT NULL,
+    sporsmal TEXT NOT NULL,
+    opprettet DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    type VARCHAR(30) DEFAULT NULL,
+    Answer VARCHAR(200) DEFAULT '0',
+
+    PRIMARY KEY (id)
 );
 ```
 
