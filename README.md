@@ -144,6 +144,7 @@ pages - artikkler i nettsiden
 | opprettet | datetime     | NO   |     | current_timestamp() |                |
 | type      | varchar(30)  | YES  |     | NULL                |                |
 | Answer    | varchar(200) | YES  |     | 0                   |                |
+| public    | varchar(10)  | YES  |     | 0                   |                |
 +-----------+--------------+------+-----+---------------------+----------------+
 ```
 **SQL-eksempel:**
@@ -187,7 +188,7 @@ CREATE TABLE Questions (
     opprettet DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     type VARCHAR(30) DEFAULT NULL,
     Answer VARCHAR(200) DEFAULT '0',
-
+    public VARCHAR(10) DEFAULT '0',
     PRIMARY KEY (id)
 );
 ```
