@@ -53,7 +53,10 @@
             <th>Answered?</th>
             <th>View</th>
         </tr>
-        {% for q in query %}
+        {% for q in list %}
+        {% if q.type == 'AR' %}
+        {% else %}
+    
         <tr>
             <td>{{ q.id }}</td>
             <td>{{ q.sporsmal }}</td>
@@ -64,8 +67,9 @@
             {% else %}
             <td>Answered</td>
             {% endif %}
-            <td><a href="/faq/{{ q.navn }}/{{ q.id }}"><button>View</button></a></td>
+            <td><a href="/faq-public/{{ q.id }}"><button>View</button></a></td>
         </tr>
+        {% endif %}
         {% endfor %}
 
 

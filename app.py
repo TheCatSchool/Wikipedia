@@ -206,7 +206,7 @@ def edit_page(slug):
     # activity = cursor.fetchone()
     # if (activity == 0):
     #     return redirect("/home")
-    cursor.execute("SELECT FROM pages WHERE Slug=%s", (slug,)) #feches page info
+    cursor.execute("SELECT * FROM pages WHERE Slug=%s", (slug,)) #feches page info
     page = cursor.fetchone()
 
     if request.method == "POST":
@@ -303,6 +303,7 @@ def faqreq():
         if request.method == "POST":
             question = request.form['Q']
             tr = request.form['typeR']
+            pon = request.form['Public']
             usrid = session.get("id")
             cursor.execute("select * from users where id = %s", (usrid,))
             usr = cursor.fetchone()
@@ -310,8 +311,8 @@ def faqreq():
             usremail = usr['Email']
         
     
-            cursor.execute("INSERT INTO Questions (navn, epost, sporsmal, type) VALUES (%s, %s, %s, %s)",
-                           (usrname, usremail, question, tr))
+            cursor.execute("INSERT INTO Questions (navn, epost, sporsmal, type, public) VALUES (%s, %s, %s, %s, %s)",
+                           (usrname, usremail, question, tr, pon))
             conn.commit()
             conn.close()
 
@@ -332,42 +333,40 @@ def faqreq():
 
         return render_template("faqRequest.html")
 
-@app.route("/faq/<slug>", methods=["GET", "POST"])
-def raquery(slug):
 
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM Questions WHERE navn =%s", (slug,)) 
-    pr = cursor.fetchone()
+@app.route('/admin/faq', methods=["GET", "POST"])
+def faqadminview():
+    if session.get("role") == "admin":
+
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("SELECT * FROM Questions")
+        querya = cursor.fetchall()
+        conn.close()
+
     
-    usr = pr['navn']
-    email = pr['epost']
-    question = pr['sporsmal']
-    askd = pr['opprettet']
-    typ = pr['type']
-
-
-
-
-    return render_template("faqview.html", Name=usr, email=email, bon=question, role=askd, created=typ)
+        return render_template("adminFaqList.html", query=querya)
+    else:
+        return redirect("/faq")
 
 @app.route("/admin/faq/<slug>", methods=["GET", "POST"])
 def adminquery(slug):
- 
     if session.get("role") == "admin":
-        
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM Questions WHERE navn =%s", (slug,)) 
+        cursor.execute("SELECT * FROM Questions WHERE id = %s", (slug,))
+
         pr = cursor.fetchone()
-    
+
         usr = pr['navn']
-        faqid = ['id']
+        faqid = pr['id']
         email = pr['epost']
         question = pr['sporsmal']
         askd = pr['opprettet']
         typ = pr['type']
+
         if request.method == "POST":
             answer = request.form["ans"]
             cursor.execute("Update Questions SET Answer = %s WHERE navn = %s",(answer, usr,))
@@ -375,8 +374,76 @@ def adminquery(slug):
             conn.close()
             
             return redirect("/home")
-        
-    else: 
-        return redirect("/profile")
+    else:
+        return redirect('/home')
 
+   
+   
     return render_template("adminFaq.html", Name=usr, email=email, bon=question, role=askd, created=typ)
+
+@app.route("/faq/publiclist", methods=["GET", "POST"])
+def publiclist():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM Questions WHERE public = 1")
+
+    publics = cursor.fetchall()
+
+
+    return render_template('FaqPubList.html', list=publics)
+
+@app.route("/faq-public/<id>", methods=["GET", "POST"])
+def publicQuestion(id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM Questions WHERE id = %s", (id,))
+
+    faqarticle = cursor.fetchall()
+
+    return render_template('FaqPublics.html', chosen=faqarticle)
+
+
+@app.route("/faq/<slug>", methods=["GET", "POST"])
+def userfaq(slug):
+    if session.get("user") == slug:
+
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("SELECT * FROM Questions WHERE navn = %s", (slug,))
+
+        questions = cursor.fetchall()
+        conn.close()
+        return render_template('faqview.html', usr=slug, query=questions)
+    
+      
+
+    else:
+        return redirect('/home')
+        
+@app.route("/faq/<slug>/<int:id>", methods=["GET", "POST"] )
+def indidfaq(slug, id):
+    
+    if session.get("user") == slug:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("SELECT * FROM Questions WHERE id = %s", (id,))
+
+        question = cursor.fetchall()
+        
+
+
+        return render_template("faqviewing.html", query=question)
+    else:
+        return redirect('/home')
+    
+    
+
+        
+
+
+
+   

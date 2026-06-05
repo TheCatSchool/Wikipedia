@@ -50,21 +50,17 @@
             <th>Question</th>
             <th>type of question</th>
             <th>When asked</th>
-            <th>Answered?</th>
-            <th>View</th>
+            <th>Answer</th>
+
         </tr>
         {% for q in query %}
+    
         <tr>
-            <td>{{ q.id }}</td>
-            <td>{{ q.sporsmal }}</td>
-            <td>{{ q.type }}</td>
-            <td>{{ q.opprettet }}</td>
-            {% if q.Answer == '0' %}
-            <td>Not Answered</td>
-            {% else %}
-            <td>Answered</td>
-            {% endif %}
-            <td><a href="/faq/{{ q.navn }}/{{ q.id }}"><button>View</button></a></td>
+            <td> {{ q.id }} </td>
+            <td> {{ q.sporsmal }} </td>
+            <td> {{ q.type }} </td>
+            <td> {{ q.opprettet}} </td>
+            <td> {{ q.Answer }} </td>
         </tr>
         {% endfor %}
 

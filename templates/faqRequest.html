@@ -4,23 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
 </head>
 
 <body>
+    <div class="LinkBarWikiStyle">
+        <div class="LinkBarWikiStyle-section"><a href="/home">
+                <p>Home</p>
+            </a></div>
+        <form method="GET" action="/wiki/">
+            <div class="LinkBarWikiStyle-section">
+                <input type="text" name="title" placeholder="search">
+                <button type="submit">Search</button>
+            </div>
+        </form>
+        <div class="LinkBarWikiStyle-section1"><a href="/pages">
+                <p>Pages</p>
+            </a></div>
+
+        {% if session.get('user') %}
+
+        <div class="LinkBarWikiStyle-section">
+            <a href="/profile">
+                <p>profile</p>
+            </a>
+
+        </div>
+        {% else %}
+        <div class="LinkBarWikiStyle-section1">
+            <a href="/login">
+                <p>log in</p>
+            </a>
+            <a href="/registrer">
+                <p>register</p>
+            </a>
+
+        </div>
+        {% endif %}
+
+
+
+    </div>
+   
     <form method="POST" action="/faq/request">
         <label for="Question">input:</label><br>
         <input type="text" id="question" name="Q" required><br><br>
 
         <label for="type">Type of question:</label><br>
         <select type="typeR" id="typeR" name="typeR" required>
-            <option value="Account Removal">Account removal</option>
+            <option value="AR">Account removal</option>
             <option value="question">Question</option>
+        </select><br>
+        <label for="public">Public?:</label><br>
+        <select type="Public" id="Public" name="Public" required>
+            <option value="1">Public</option>
+            <option value="0">Private</option>
         </select>
         <br><br>
 
 
-        <button type="submit">Logg Inn</button>
+        <button type="submit">Ask</button>
     </form>
+     <a href="/faq/publiclist"><button>Common request</button></a>
 </body>
 
 </html>

@@ -17,6 +17,7 @@
     </header>
     <h1>Velkommen, {{ brukernavn }}!</h1>
     <p>Du er nå logget inn.</p>
+    <a href="/faq/{{ brukernavn }}"></a>
 
     <a href="{{ url_for('logout') }}">Logg ut</a>
     <a href="{{ url_for('create_page') }}">create</a>

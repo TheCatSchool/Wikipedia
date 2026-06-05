@@ -1,0 +1,36 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <table border="1">
+        <tr>
+            <th>Asker</th>
+            <th>Type</th>
+            <th>View</th>
+        </tr>
+        {% for q in query %}
+        <tr>
+            <td>{{ q.navn }}</td>
+            <td>{{ q.type }}</td>
+            {% if q.Answer == '0' %}
+                {% if q.type == 'AR' %}
+                    <td><a href="/faqremove/{{ q.navn }}"><button>delete</button></a></td>
+                {% else %}
+                    <td><a href="/admin/faq/{{ q.id }}"><button>view</button></a></td>
+                {% endif %}
+            {% else %}
+                <td>Answered</td>
+            {% endif %}
+      
+        </tr>
+        {% endfor %}
+
+    </table>
+</body>
+
+</html>
