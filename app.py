@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
@@ -5,20 +7,15 @@ import re
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
-
-
-
-
+load_dotenv()  
 def slugify(text):
-    text = text.lower()
-    text = re.sub(r'[^a-z0-9]+', '-', text)
-    return text.strip('-')
+    ...
 
-# Bruker du Mariadb så bytter du ut mysql med mariadb. Mariadb må installeres med (pip install mariadb) Koden finner du på neste linje.
-# import mariadb
+
+
 
 app = Flask(__name__)
-app.secret_key = "this is a key"
+app.secret_key = os.getenv("SECRET_KEY")
 
 limiter = Limiter(
     get_remote_address,  # Tracks users by their IP address
@@ -30,19 +27,27 @@ limiter = Limiter(
 
 def get_db_connection(): #defines the database
     return mysql.connector.connect(
-        host="127.0.0.1",
-        # host="10.200.14.14",
-        user="work",
-        # password="123",
-        password="",
-        database="Wikipedia"
-        
+        host=os.getenv("DB_HOST"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME"),
+        charset="utf8mb4",
     )
+
 
 @app.route('/') #for start up, redirects to home so i dont have to manually write /home
 def some():
     return redirect('/home')
 
+@app.route("/dbtest") #fortestign
+def dbtest():
+   conn = get_db_connection()
+   cursor = conn.cursor()
+   cursor.execute("SELECT VERSION() AS v")
+   version = cursor.fetchone()
+   cursor.close()
+   conn.close()
+   return f"Database version: {version[0]}"
 @app.route('/home')
 def home():
     return render_template("home.html") #renders home template, which includes links for other pages
