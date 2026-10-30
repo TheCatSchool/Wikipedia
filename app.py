@@ -18,7 +18,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
 limiter = Limiter(
-    get_remote_address,  # Tracks users by their IP address
+    get_remote_address,  # Tracks Users by their IP address
     app=app,
     default_limits=["200 per day"],
     storage_uri="memory://", # Use "redis://localhost:6379" for production
@@ -62,7 +62,7 @@ def register():
 
         conn = get_db_connection() #fetch database
         cursor = conn.cursor() #define database cmds
-        cursor.execute("INSERT INTO users (Username, Email, Password_hashed) VALUES (%s, %s, %s)",  
+        cursor.execute("INSERT INTO Users (Username, Email, Password_hashed) VALUES (%s, %s, %s)",  
                        (brukernavn, epost, passord)) #insert into the database with the gathered information
         conn.commit()
         #commit changes so its saved
@@ -88,10 +88,10 @@ def login():
         
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM users WHERE Username=%s", (brukernavn,)) #fetches user with matching username
+        cursor.execute("SELECT * FROM Users WHERE Username=%s", (brukernavn,)) #fetches user with matching username
         user = cursor.fetchone()
 
-        # cursor.execute("SELECT Active FROM users WHERE Username=%s", (brukernavn,))
+        # cursor.execute("SELECT Active FROM Users WHERE Username=%s", (brukernavn,))
         # activity = cursor.fetchone()
        
         
@@ -102,7 +102,7 @@ def login():
             session['role'] = user['Role']
             session['id'] = user['ID']
             x = user['ID']
-            cursor.execute("UPDATE users SET UsedAt = current_timestamp() where id =%s", (x,))
+            cursor.execute("UPDATE Users SET UsedAt = current_timestamp() where id =%s", (x,))
             conn.commit()
 
             if user['Active'] == 0:
@@ -135,11 +135,11 @@ def admin_dashboard():
     if session.get("role") == "admin": #makes it so you need to be admin to be here.
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM users;") #fetches all users
+        cursor.execute("SELECT * FROM Users;") #fetches all Users
         uses = cursor.fetchall()
         cursor.close()
         conn.close()
-        return render_template("admin.html", brukernavn=session['user'], users=uses)  #displays the information
+        return render_template("admin.html", brukernavn=session['user'], Users=uses)  #displays the information
     return redirect(url_for("login"))
 
 # User dashboard
@@ -207,7 +207,7 @@ def edit_page(slug):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    # cursor.execute("SELECT Active FROM users WHERE id=%s", (BanOrNot,))
+    # cursor.execute("SELECT Active FROM Users WHERE id=%s", (BanOrNot,))
     # activity = cursor.fetchone()
     # if (activity == 0):
     #     return redirect("/home")
@@ -248,12 +248,12 @@ def wiki_redirect():
     title = request.args.get("title") #uses title which it has been given before
     return redirect(f"/wiki/{title}") #redirects to wiki page with slug. 
 
-@app.route("/users/<slug>", methods=["GET", "POST"])
-def users_profiles(slug):
+@app.route("/Users/<slug>", methods=["GET", "POST"])
+def Users_profiles(slug):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM users WHERE ID =%s", (slug,)) 
+    cursor.execute("SELECT * FROM Users WHERE ID =%s", (slug,)) 
     pr = cursor.fetchone()
     
 
@@ -266,17 +266,17 @@ def users_profiles(slug):
     
 
 
-    return render_template("users.html", Name=user, email=email, bon=Status, role=Role, created=birth, lastUsed=lastUsed)
+    return render_template("Users.html", Name=user, email=email, bon=Status, role=Role, created=birth, lastUsed=lastUsed)
 
 @app.route("/remove/<slug>")
-def delete_users(slug):
+def delete_Users(slug):
     if session.get("role") == "admin":
 
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
 
         cursor.execute("""
-            UPDATE users
+            UPDATE Users
             SET
                 Active = 0,
                 Username = CONCAT('deleted_user_', id),
@@ -310,7 +310,7 @@ def faqreq():
             tr = request.form['typeR']
             pon = request.form['Public']
             usrid = session.get("id")
-            cursor.execute("select * from users where id = %s", (usrid,))
+            cursor.execute("select * from Users where id = %s", (usrid,))
             usr = cursor.fetchone()
             usrname = usr['Username']
             usremail = usr['Email']
