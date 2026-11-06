@@ -9,8 +9,9 @@ from flask_limiter.util import get_remote_address
 
 load_dotenv()  
 def slugify(text):
-    ...
-
+    text = text.lower()
+    text = re.sub(r'[^a-z0-9]+', '-', text)
+    return text.strip('-')
 
 
 
@@ -156,6 +157,28 @@ def user_dashboard():
 def logout():
     session.clear()
     return redirect(url_for("login"))
+
+
+###Profiles####
+
+@app.route("/user/<slug>", methods=["GET", "POST"])
+def profiles(slug):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM Profiles WHERE user=%s", (slug,))
+    profileinfo = cursor.fetchall()
+    cursor.execute("SELECT * FROM Users WHERE user=%s", (slug,))
+    otherinfo = cursor.fetchall()
+    pagescreated = otherinfo.ID
+    cursor.execute("SELECT * FROM Pages WHERE CreatorID=%s", (pagescreated,))
+    pagesinfo = cursor.fetchall()
+    return render_template("userprof.html")
+
+
+
+
+
+####
 @app.route("/create", methods=["GET", "POST"]) 
 def create_page():
     if not session.get("user"): #checks if you are logged in if not redirects
